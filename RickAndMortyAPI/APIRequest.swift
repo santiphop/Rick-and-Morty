@@ -24,7 +24,6 @@ class APIRequest {
             do {
                 let characters = try JSONDecoder().decode(Character.self, from: data)
                 let results = characters.results
-//                print(results.count)
                 completion(.success(results))
             } catch {
                 completion(.failure(.canNotProcessData))
@@ -53,7 +52,6 @@ class APIRequest {
             do {
                 let characters = try JSONDecoder().decode(Character.self, from: data)
                 let info = characters.info
-//                print(info.next!)
                 completion(.success(info))
             } catch {
                 completion(.failure(.canNotProcessData))

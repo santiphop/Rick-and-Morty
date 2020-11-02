@@ -35,8 +35,5 @@ class ResultViewModel {
         let result = characters[index]
         return result
     }
-    
-//    func getSelect() -> ResultInfo {
-//        return selectedC
-//    }
+
 }

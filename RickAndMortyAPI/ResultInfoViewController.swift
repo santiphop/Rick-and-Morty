@@ -16,10 +16,6 @@ class ResultInfoViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        // Do any additional setup after loading the view.
-//        label.text = viewModel?.getNumberOfRowsInSection()]
-        
-//        print(resultDetail?.name)
         self.navigationItem.title = resultDetail.name
         let format = "ID: \(resultDetail.id)\nName: \(resultDetail.name)\nStatus: \(resultDetail.status!)\nSpecies: \(resultDetail.species!)\nGender: \(resultDetail.gender!)\nOrigin: \(resultDetail.origin!.name!)\nLocation: \(resultDetail.location!.name!)"
         label.text = format
