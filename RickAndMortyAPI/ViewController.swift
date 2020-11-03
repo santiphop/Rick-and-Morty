@@ -13,62 +13,42 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     
     @IBOutlet weak var nextButton: UIButton!
     @IBOutlet weak var prevButton: UIButton!
+    
     @IBAction func prevButtonAction(_ sender: Any) {
-        if infoData.prev != nil {
+        if let prevPage = viewModel.infoData.prev {
             currentPage -= 1
-            self.getDataFrom(url: infoData.prev!)
-            self.pageLabel.text = "\(self.currentPage) / \(self.infoData.pages!)"
-            
-            DispatchQueue.main.async {
-                self.tableView.reloadData()
-            }
-            
+            self.updateView(url: prevPage)
         }
         
     }
     @IBAction func nextButtonAction(_ sender: Any) {
-        if infoData.next != nil {
+        if let nextPage = viewModel.infoData.next {
             currentPage += 1
-            
-            self.getDataFrom(url: infoData.next!)
-            self.pageLabel.text = "\(self.currentPage) / \(self.infoData.pages!)"
-            
-            DispatchQueue.main.async {
-                self.tableView.reloadData()
-            }
+            self.updateView(url: nextPage)
         }
+        
     }
-    var infoData = InfoData(count: nil, pages: nil, next: nil, prev: nil)
-    var currentPage:Int = 1
 
-    var listOfResults = [ResultInfo]() {
-        didSet {
-            DispatchQueue.main.async {
-                self.tableView.reloadData()
-                self.navigationItem.title = "Character"
-                self.pageLabel.text = "\(self.currentPage) / \(self.infoData.pages!)"
-            }
-        }
-    }
+    var currentPage:Int = 1
     
     var resultDetail = ResultInfo(id: 0, name: "", status: nil, species: nil, gender: nil, image: nil, origin: nil, location: nil)
     
     var viewModel = ResultViewModel()
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return listOfResults.count
+        return viewModel.characters.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell1", for: indexPath)
-        let result = listOfResults[indexPath.row]
+        let result = viewModel.characters[indexPath.row]
         cell.textLabel?.text = "\(result.name)"
         return cell
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        resultDetail = viewModel.getResult(at: indexPath.row)
+        resultDetail = viewModel.characters[indexPath.row]
         performSegue(withIdentifier: "MainToDetailViewController", sender: nil)
     }
     
@@ -76,8 +56,24 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        self.navigationItem.title = "Character"
+        
+        viewModel.getDataFromAPIHandleClass(url: EndPoint.resourceURL)
+        updateView(url: EndPoint.resourceURL)
 
-        self.getDataFrom(url: EndPoint.resourceURL)
+//        while true {
+//            print("try")
+//            if viewModel.infoData.pages != nil {
+//                DispatchQueue.main.async {
+//                    self.updatePageLabel()
+//                    self.tableView.reloadData()
+//                }
+//                break
+//            }
+//        }
+        
+        
         
     }
 
@@ -88,33 +84,43 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
             
             // Pass text to SecondVC
             destinationVC.resultDetail = self.resultDetail
-        
+
+    }
+    
+    func updateView(url: String) {
+        self.viewModel.getDataFromAPIHandleClass(url: url)
+        sleep(1)
+        DispatchQueue.main.async {
+            self.pageLabel.text = "\(self.currentPage) / \(self.viewModel.infoData.pages!)"
+            self.tableView.reloadData()
+        }
     }
 }
 
-extension ViewController {
-    func getDataFrom(url:String) {
-        let request = viewModel.apiRequest
-        request.getResultDataFromAPI(url: url) { [weak self] result in
-            switch result {
-            case .failure(let err):
-                print(err)
-            case .success(let results):
-                self?.listOfResults = results
-                self?.viewModel.characters = results
-            }
-            
-        }
-        
-        
-        request.getInfoDataFromAPI(url: url) { [weak self] result in
-            switch result {
-            case .failure(let err):
-                print(err)
-            case .success(let info):
-                self?.infoData = info
-            }
-            
-        }
-    }
-}
+//
+//extension ViewController {
+//    func getDataFrom(url:String) {
+//        let request = viewModel.apiRequest
+//        request.getResultDataFromAPI(url: url) { [weak self] result in
+//            switch result {
+//            case .failure(let err):
+//                print(err)
+//            case .success(let results):
+////                self?.listOfResults = results
+//                self?.viewModel.characters = results
+//            }
+//
+//        }
+//
+//
+//        request.getInfoDataFromAPI(url: url) { [weak self] result in
+//            switch result {
+//            case .failure(let err):
+//                print(err)
+//            case .success(let info):
+//                self?.infoData = info
+//            }
+//
+//        }
+//    }
+//}

@@ -10,7 +10,7 @@ import Foundation
 class ResultViewModel {
     var apiRequest = APIRequest()
     var characters = [ResultInfo]()
-//    var selectedCharacter = ResultInfo(id: 0, name: "", status: "", species: "", gender: "")
+    var infoData = InfoData(count: nil, pages: nil, next: nil, prev: nil)
 
     func getDataFromAPIHandleClass(url:String) {
         
@@ -19,21 +19,30 @@ class ResultViewModel {
             case .failure(let err):
                 print(err)
             case .success(let results):
-                print(results.count)
-                self?.characters = results
+                self!.characters = results
+            }
+            
+        }
+        
+        apiRequest.getInfoDataFromAPI(url: url) { [weak self] result in
+            switch result {
+            case .failure(let err):
+                print(err)
+            case .success(let info):
+                self!.infoData = info
             }
             
         }
     }
     
-    func getNumberOfRowsInSection() -> Int {
-        print("return \(characters.count)")
-        return characters.count
-    }
-    
-    func getResult(at index: Int) -> ResultInfo {
-        let result = characters[index]
-        return result
-    }
+//    func getNumberOfRowsInSection() -> Int {
+//        print("return \(characters.count)")
+//        return characters.count
+//    }
+//    
+//    func getResult(at index: Int) -> ResultInfo {
+//        let result = characters[index]
+//        return result
+//    }
 
 }
