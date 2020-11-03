@@ -36,19 +36,19 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     var viewModel = ResultViewModel()
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return viewModel.characters.count
+        return viewModel.results.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell1", for: indexPath)
-        let result = viewModel.characters[indexPath.row]
+        let result = viewModel.results[indexPath.row]
         cell.textLabel?.text = "\(result.name)"
         return cell
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        resultDetail = viewModel.characters[indexPath.row]
+        resultDetail = viewModel.results[indexPath.row]
         performSegue(withIdentifier: "MainToDetailViewController", sender: nil)
     }
     
@@ -90,10 +90,10 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     func updateView(url: String) {
         self.viewModel.getDataFromAPIHandleClass(url: url)
         sleep(1)
-        DispatchQueue.main.async {
-            self.pageLabel.text = "\(self.currentPage) / \(self.viewModel.infoData.pages!)"
-            self.tableView.reloadData()
-        }
+        
+        self.pageLabel.text = "\(self.currentPage) / \(self.viewModel.infoData.pages!)"
+        self.tableView.reloadData()
+        
     }
 }
 

@@ -9,27 +9,38 @@ import Foundation
 
 class ResultViewModel {
     var apiRequest = APIRequest()
-    var characters = [ResultInfo]()
+    var results = [ResultInfo]()
     var infoData = InfoData(count: nil, pages: nil, next: nil, prev: nil)
 
     func getDataFromAPIHandleClass(url:String) {
         
-        apiRequest.getResultDataFromAPI(url: url) { [weak self] result in
-            switch result {
-            case .failure(let err):
-                print(err)
-            case .success(let results):
-                self!.characters = results
-            }
-            
-        }
+//        apiRequest.getResultDataFromAPI(url: url) { [weak self] result in
+//            switch result {
+//            case .failure(let err):
+//                print(err)
+//            case .success(let results):
+//                self!.characters = results
+//            }
+//            
+//        }
+//        
+//        apiRequest.getInfoDataFromAPI(url: url) { [weak self] result in
+//            switch result {
+//            case .failure(let err):
+//                print(err)
+//            case .success(let info):
+//                self!.infoData = info
+//            }
+//            
+//        }
         
-        apiRequest.getInfoDataFromAPI(url: url) { [weak self] result in
-            switch result {
+        apiRequest.getDataFromAPI(url: url) { [weak self] data in
+            switch data {
             case .failure(let err):
                 print(err)
-            case .success(let info):
-                self!.infoData = info
+            case .success(let character):
+                self!.results = character.results
+                self!.infoData = character.info
             }
             
         }
