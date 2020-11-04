@@ -7,7 +7,7 @@
 
 import UIKit
 
-class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
+class ViewController: UIViewController {
     @IBOutlet var tableView: UITableView!
     @IBOutlet var pageLabel: UILabel!
     
@@ -35,6 +35,40 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     
     var viewModel = ResultViewModel()
     
+    
+    
+    
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        self.navigationItem.title = "Character"
+        
+        updateView(url: EndPoint.resourceURL)
+       
+    }
+
+
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+            
+            let destinationVC = segue.destination as! ResultInfoViewController
+            
+            // Pass text to SecondVC
+            destinationVC.resultDetail = self.resultDetail
+
+    }
+    
+    func updateView(url: String) {
+        self.viewModel.getDataFromAPIRequest(url: url) { _ in
+            DispatchQueue.main.async {
+                self.pageLabel.text = "\(self.currentPage) / \(self.viewModel.infoData.pages!)"
+                self.tableView.reloadData()
+            }
+        }
+    }
+}
+
+extension ViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return viewModel.results.count
     }
@@ -51,76 +85,4 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         resultDetail = viewModel.results[indexPath.row]
         performSegue(withIdentifier: "MainToDetailViewController", sender: nil)
     }
-    
-    
-
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        
-        self.navigationItem.title = "Character"
-        
-        viewModel.getDataFromAPIHandleClass(url: EndPoint.resourceURL)
-        updateView(url: EndPoint.resourceURL)
-
-//        while true {
-//            print("try")
-//            if viewModel.infoData.pages != nil {
-//                DispatchQueue.main.async {
-//                    self.updatePageLabel()
-//                    self.tableView.reloadData()
-//                }
-//                break
-//            }
-//        }
-        
-        
-        
-    }
-
-
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-            
-            let destinationVC = segue.destination as! ResultInfoViewController
-            
-            // Pass text to SecondVC
-            destinationVC.resultDetail = self.resultDetail
-
-    }
-    
-    func updateView(url: String) {
-        self.viewModel.getDataFromAPIHandleClass(url: url)
-        sleep(1)
-        
-        self.pageLabel.text = "\(self.currentPage) / \(self.viewModel.infoData.pages!)"
-        self.tableView.reloadData()
-        
-    }
 }
-
-//
-//extension ViewController {
-//    func getDataFrom(url:String) {
-//        let request = viewModel.apiRequest
-//        request.getResultDataFromAPI(url: url) { [weak self] result in
-//            switch result {
-//            case .failure(let err):
-//                print(err)
-//            case .success(let results):
-////                self?.listOfResults = results
-//                self?.viewModel.characters = results
-//            }
-//
-//        }
-//
-//
-//        request.getInfoDataFromAPI(url: url) { [weak self] result in
-//            switch result {
-//            case .failure(let err):
-//                print(err)
-//            case .success(let info):
-//                self?.infoData = info
-//            }
-//
-//        }
-//    }
-//}

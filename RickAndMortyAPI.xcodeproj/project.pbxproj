@@ -76,8 +76,8 @@
 				8F2AE466254EF635009AB669 /* Info.plist */,
 				8F2AE46D254EF7BD009AB669 /* ResultInfo.swift */,
 				8F2AE470254EF943009AB669 /* APIRequest.swift */,
-				8F2AE473254EF9DC009AB669 /* Constant.swift */,
 				8F2AE476254EFA29009AB669 /* ViewModel.swift */,
+				8F2AE473254EF9DC009AB669 /* Constant.swift */,
 			);
 			path = RickAndMortyAPI;
 			sourceTree = "<group>";

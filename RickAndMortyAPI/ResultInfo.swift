@@ -8,7 +8,7 @@
 import Foundation
 
 struct Character: Decodable {
-    let info: InfoData
+    let info: InfoData?
     let results: [ResultInfo]
 }
 
